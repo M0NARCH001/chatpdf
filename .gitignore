@@ -53,6 +53,9 @@ Thumbs.db
 # Gradio auto-generated certificate (not a secret, just not needed in repo)
 frontend/.gradio/
 
+# Sample documents (binary — upload through the UI instead)
+data/sample_docs/
+
 # One-off diagnostic scripts
 diagnose.py
 diagnose_output.txt
