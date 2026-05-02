@@ -1,9 +1,9 @@
 """
-Unified entry point for HuggingFace Spaces and local development.
+HuggingFace Spaces entry point.
 
-FastAPI starts as a background daemon thread on port 8000.
-Gradio launches on port 7860 (the port HuggingFace Spaces exposes).
-A health-poll loop waits for the backend before starting the UI.
+HF Gradio SDK requires a module-level `demo` variable.
+We start FastAPI as a background daemon thread first, poll until it is
+ready, then expose the Gradio Blocks object so HF can serve it.
 """
 import logging
 import os
@@ -20,16 +20,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Ensure project root is on the path (needed when HF runs `python app.py`)
+# Ensure project root is on the path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def _run_backend():
-    from app.main import app  # import here so dotenv loads first
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
+    """Run FastAPI on port 8000 (internal — not exposed by HF)."""
+    from app.main import app as fastapi_app
+    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000, log_level="warning")
 
 
-def _wait_for_backend(url: str, timeout: int = 60) -> bool:
+def _wait_for_backend(url: str, timeout: int = 90) -> bool:
     """Poll the health endpoint until the backend is up or timeout expires."""
     deadline = time.time() + timeout
     while time.time() < deadline:
@@ -43,22 +47,23 @@ def _wait_for_backend(url: str, timeout: int = 60) -> bool:
     return False
 
 
-def main():
-    from dotenv import load_dotenv
-    load_dotenv()
+# ── Start FastAPI backend immediately on module import ───────────────────────
+logger.info("Starting FastAPI backend on port 8000 (background thread)…")
+_backend_thread = threading.Thread(target=_run_backend, daemon=True)
+_backend_thread.start()
 
-    logger.info("Starting FastAPI backend on port 8000 (background thread)…")
-    backend_thread = threading.Thread(target=_run_backend, daemon=True)
-    backend_thread.start()
+logger.info("Waiting for backend to be ready…")
+if not _wait_for_backend("http://localhost:8000/health"):
+    logger.error("Backend did not become ready within 90 s.")
+    # Don't sys.exit here — let Gradio still launch so HF shows something useful
+else:
+    logger.info("Backend is ready.")
 
-    health_url = "http://localhost:8000/health"
-    logger.info("Waiting for backend to be ready…")
-    if not _wait_for_backend(health_url):
-        logger.error("Backend did not become ready within 60 s. Aborting.")
-        sys.exit(1)
-    logger.info("Backend ready. Launching Gradio frontend on port 7860…")
+# ── Import Gradio demo (module-level — required by HF Gradio SDK) ────────────
+from frontend.gradio_app import demo  # noqa: E402  (import after backend starts)
 
-    from frontend.gradio_app import demo
+# ── Local launch ─────────────────────────────────────────────────────────────
+if __name__ == "__main__":
     import gradio as gr
     demo.launch(
         server_name="0.0.0.0",
@@ -66,7 +71,3 @@ def main():
         share=False,
         theme=gr.themes.Soft(),
     )
-
-
-if __name__ == "__main__":
-    main()
