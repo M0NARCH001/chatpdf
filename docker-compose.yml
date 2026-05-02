@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: docchat_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build: .
+    container_name: docchat_frontend
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
+      - API_BASE_URL=http://backend:8000/api
+    command: python frontend/gradio_app.py
+    depends_on:
+      - backend

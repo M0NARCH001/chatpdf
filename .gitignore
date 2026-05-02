@@ -1,0 +1,64 @@
+# Secrets — never commit real keys
+.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Vector store & database — regenerated at runtime
+chroma_db/
+data/*.db
+data/*.sqlite
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Test / tooling caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Temp upload staging area
+temp_uploads/
+
+# Evaluation history (runtime artifact)
+data/eval_history.json
+eval_history.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Claude internal
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Gradio auto-generated certificate (not a secret, just not needed in repo)
+frontend/.gradio/
+
+# One-off diagnostic scripts
+diagnose.py
+diagnose_output.txt
+
+# HuggingFace model cache (large, re-downloaded at runtime)
+*.safetensors
+*.bin
+hf_models/
+model_cache/
