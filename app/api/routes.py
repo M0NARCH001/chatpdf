@@ -72,12 +72,14 @@ async def start_session(request: SessionStartRequest, db: Session = Depends(get_
     """Login or register with display_name + password."""
     if len(request.display_name.strip()) < 2:
         raise HTTPException(status_code=422, detail="Display name must be at least 2 characters.")
-    if len(request.password) < 4:
-        raise HTTPException(status_code=422, detail="Password must be at least 4 characters.")
+    if len(request.password) < 8:
+        raise HTTPException(status_code=422, detail="Password must be at least 8 characters.")
     try:
         user, error = login_or_register(request.display_name.strip(), request.password, db)
         if error:
-            raise HTTPException(status_code=401, detail=error)
+            # 429 for the rate-limit lockout, 401 for a wrong password
+            status = 429 if error.startswith("Too many") else 401
+            raise HTTPException(status_code=status, detail=error)
         return {"session_id": user.session_id, "display_name": user.display_name}
     except HTTPException:
         raise

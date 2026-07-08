@@ -48,8 +48,9 @@ class RAGChain:
     """
 
     def __init__(self, collection_name: str, session_id: str) -> None:
-        self._retriever = get_hybrid_retriever(collection_name)
         self._llm = get_llm(streaming=False)
+        # Pass the LLM so the retriever can apply contextual compression.
+        self._retriever = get_hybrid_retriever(collection_name, llm=self._llm)
         self._session_id = session_id
         self._output_parser = StrOutputParser()
 

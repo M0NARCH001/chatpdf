@@ -23,14 +23,14 @@ def get_llm(streaming: bool = True) -> BaseChatModel:
             temperature=0.0
         )
     else:
-        logger.info("Loading OpenAI LLM (gpt-4o-mini).")
+        logger.info("Loading OpenAI LLM (gpt-4o).")
         # Ensure API key exists
         api_key = os.environ.get("OPENAI_API_KEY", "")
         if not api_key or api_key == "your_openai_api_key_here":
             raise ValueError("OPENAI_API_KEY is not set or is still the default value.")
             
         llm = ChatOpenAI(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             streaming=streaming,
             temperature=0.0,
             max_retries=3,

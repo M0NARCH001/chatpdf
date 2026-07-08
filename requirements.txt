@@ -10,6 +10,7 @@ langchain-openai==1.1.10
 langchain-chroma==1.1.0
 langchain-huggingface==1.2.1
 langchain-text-splitters==1.1.1
+langchain-classic==1.0.2
 
 # Vector store & embeddings
 chromadb==1.5.2
@@ -19,8 +20,10 @@ sentence-transformers==5.2.3
 pypdf==6.7.5
 docx2txt==0.9
 
-# Frontend
-gradio==6.9.0
+# Frontend — must match README `sdk_version`. 5.x is the sweet spot: 4.x crashes
+# on the modern huggingface_hub (removed HfFolder), while 6.x dropped the tuple
+# chat format this UI uses. 5.50.0 imports cleanly and still supports type="tuples".
+gradio==5.50.0
 
 # RAG evaluation
 ragas==0.4.3

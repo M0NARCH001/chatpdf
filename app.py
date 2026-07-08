@@ -60,14 +60,13 @@ else:
     logger.info("Backend is ready.")
 
 # ── Import Gradio demo (module-level — required by HF Gradio SDK) ────────────
-from frontend.gradio_app import demo  # noqa: E402  (import after backend starts)
+from frontend.gradio_app import LAUNCH_KWARGS, demo  # noqa: E402  (import after backend starts)
 
 # ── Local launch ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    import gradio as gr
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
-        theme=gr.themes.Soft(),
+        **LAUNCH_KWARGS,
     )

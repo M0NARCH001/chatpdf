@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="DocChat AI Backend",
     description="FastAPI backend for full-stack RAG chatbot.",
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
 )
 

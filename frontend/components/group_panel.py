@@ -31,8 +31,8 @@ def login_user_simple(name, password):
     """Login or register → returns 6 outputs."""
     if not name or not name.strip():
         return "", "", gr.update(visible=True), gr.update(visible=False), "⚠️ Please enter a name.", ""
-    if not password or len(password) < 3:
-        return "", "", gr.update(visible=True), gr.update(visible=False), "⚠️ Password must be at least 3 characters.", ""
+    if not password or len(password) < 8:
+        return "", "", gr.update(visible=True), gr.update(visible=False), "⚠️ Password must be at least 8 characters.", ""
 
     data, err = api_call("POST", "/session/start",
                          json_data={"display_name": name.strip(), "password": password})

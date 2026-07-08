@@ -144,7 +144,7 @@ async def run_evaluation(
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     use_openai = bool(openai_key and openai_key != "your_openai_api_key_here")
 
-    ragas_llm = ChatOpenAI(model="gpt-4o-mini") if use_openai else get_llm(streaming=False)
+    ragas_llm = ChatOpenAI(model="gpt-4o") if use_openai else get_llm(streaming=False)
     ragas_embeddings = OpenAIEmbeddings() if use_openai else get_embeddings()
 
     metrics = [faithfulness, answer_relevancy, context_precision, context_recall]

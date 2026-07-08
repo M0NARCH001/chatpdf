@@ -129,168 +129,35 @@ def chat_logic(message, history, collection_id, personal_session_id):
 
 
 # ---------------------------------------------------------------------------
-# Custom CSS — refined dark-accent editorial style
+# Custom CSS — light touch; the Gradio Soft theme does the heavy lifting.
+# No web fonts (faster load, no CSP issues on HF); just header + cards + spacing.
 # ---------------------------------------------------------------------------
 
 CUSTOM_CSS = """
-/* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
-:root {
-    --ink:        #0f1117;
-    --ink-soft:   #4a4f5c;
-    --bg:         #f7f6f2;
-    --bg-card:    #ffffff;
-    --accent:     #1a56e8;
-    --accent-dim: #d6e4ff;
-    --border:     #e2e0d8;
-    --success:    #16a34a;
-    --warn:       #b45309;
-    --mono:       'JetBrains Mono', monospace;
-    --serif:      'DM Serif Display', serif;
-    --sans:       'DM Sans', sans-serif;
-    --radius:     10px;
-    --shadow:     0 2px 12px rgba(0,0,0,.07);
-}
-
-/* Global */
-body, .gradio-container {
-    font-family: var(--sans) !important;
-    background: var(--bg) !important;
-    color: var(--ink) !important;
-}
-
-/* ── Masthead ── */
+/* Header */
 #docchat-header {
-    padding: 2.2rem 2rem 1.6rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0;
-    background: var(--bg-card);
+    padding: 1.4rem 1.5rem 1.1rem;
+    border-bottom: 1px solid var(--border-color-primary);
+    margin-bottom: .5rem;
 }
-#docchat-header h1 {
-    font-family: var(--serif);
-    font-size: 2.4rem;
-    letter-spacing: -.02em;
-    color: var(--ink);
-    margin: 0 0 .25rem;
-}
-#docchat-header p {
-    font-size: .95rem;
-    color: var(--ink-soft);
-    margin: 0;
-    font-weight: 300;
-}
+#docchat-header h1 { font-size: 1.8rem; margin: 0 0 .2rem; }
+#docchat-header p  { font-size: .9rem; opacity: .7; margin: 0; }
 
-/* ── Tabs ── */
-.tab-nav button {
-    font-family: var(--sans) !important;
-    font-weight: 500 !important;
-    font-size: .9rem !important;
-    letter-spacing: .01em !important;
-    color: var(--ink-soft) !important;
-    border-bottom: 2px solid transparent !important;
-    padding: .55rem 1.1rem !important;
-    transition: color .2s, border-color .2s !important;
+/* Cards — sidebar and login share a simple bordered box */
+.sidebar-panel, .login-card {
+    border: 1px solid var(--border-color-primary);
+    border-radius: 10px;
+    padding: 1.1rem;
 }
-.tab-nav button.selected {
-    color: var(--accent) !important;
-    border-bottom-color: var(--accent) !important;
-}
+.login-card { max-width: 440px; margin: 2rem auto; }
 
-/* ── Sidebar panel ── */
-.sidebar-panel {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.2rem;
-    box-shadow: var(--shadow);
-}
-.sidebar-panel label {
-    font-weight: 500;
-    font-size: .85rem;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-}
-
-/* ── Chatbot bubbles ── */
-.message.user  { background: var(--accent-dim) !important; border-radius: 14px 14px 2px 14px !important; }
-.message.bot   { background: var(--bg-card)    !important; border: 1px solid var(--border) !important; border-radius: 14px 14px 14px 2px !important; box-shadow: var(--shadow); }
-.message p     { font-size: .92rem; line-height: 1.65; }
-
-/* ── Buttons ── */
-button.primary {
-    background: var(--accent) !important;
-    font-family: var(--sans) !important;
-    font-weight: 600 !important;
-    letter-spacing: .02em !important;
-    border-radius: 8px !important;
-    transition: opacity .15s !important;
-}
-button.primary:hover { opacity: .88 !important; }
-button.secondary {
-    border: 1.5px solid var(--border) !important;
-    font-family: var(--sans) !important;
-    font-weight: 500 !important;
-    border-radius: 8px !important;
-    color: var(--ink) !important;
-    background: transparent !important;
-}
-
-/* ── Textboxes ── */
-textarea, input[type=text], input[type=password] {
-    font-family: var(--sans) !important;
-    font-size: .93rem !important;
-    border: 1.5px solid var(--border) !important;
-    border-radius: 8px !important;
-    background: var(--bg-card) !important;
-}
-textarea:focus, input:focus {
-    border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(26,86,232,.12) !important;
-}
-
-/* ── Source cards ── */
+/* Source citation passages */
 .source-panel blockquote {
-    border-left: 3px solid var(--accent-dim);
-    margin: .4rem 0 0 .5rem;
-    padding: .35rem .7rem;
-    color: var(--ink-soft);
-    font-size: .86rem;
-    line-height: 1.55;
-}
-
-/* ── Accordion ── */
-.accordion .label-wrap {
-    font-weight: 500 !important;
-    font-size: .9rem !important;
-}
-
-/* ── Dataframes ── */
-table th {
-    background: var(--bg) !important;
-    font-weight: 600 !important;
-    font-size: .82rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: .05em !important;
-    color: var(--ink-soft) !important;
-}
-
-/* ── Status / markdown badges ── */
-.upload-status p { font-size: .9rem; }
-
-/* ── Code / mono ── */
-code, pre { font-family: var(--mono) !important; font-size: .85rem !important; }
-
-/* ── Login card ── */
-.login-card {
-    max-width: 440px;
-    margin: 2rem auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 2rem;
-    box-shadow: var(--shadow);
+    border-left: 3px solid var(--border-color-accent, #888);
+    margin: .4rem 0 0 .3rem;
+    padding: .3rem .7rem;
+    opacity: .85;
+    font-size: .88rem;
 }
 """
 
@@ -298,7 +165,15 @@ code, pre { font-family: var(--mono) !important; font-size: .85rem !important; }
 # Build the Gradio UI
 # ---------------------------------------------------------------------------
 
-with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as demo:
+GRADIO_MAJOR_VERSION = int(gr.__version__.split(".", 1)[0])
+BLOCKS_KWARGS = {"title": "DocChat AI"}
+LAUNCH_KWARGS = {}
+if GRADIO_MAJOR_VERSION >= 6:
+    LAUNCH_KWARGS.update({"theme": gr.themes.Soft(), "css": CUSTOM_CSS})
+else:
+    BLOCKS_KWARGS.update({"theme": gr.themes.Soft(), "css": CUSTOM_CSS})
+
+with gr.Blocks(**BLOCKS_KWARGS) as demo:
 
     # Per-browser session ID (generated once on page load, not shared)
     personal_session_id = gr.State(lambda: f"ps_{uuid.uuid4().hex[:12]}")
@@ -306,10 +181,16 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
     # ── Masthead ──────────────────────────────────────────────────────────
     gr.HTML("""
     <div id="docchat-header">
-      <h1>DocChat AI</h1>
-      <p>Hybrid RAG &nbsp;·&nbsp; FastAPI &nbsp;·&nbsp; LangChain &nbsp;·&nbsp; ChromaDB &nbsp;·&nbsp; Gradio</p>
+      <h1>📚 DocChat AI</h1>
+      <p>Upload your documents and ask questions — get answers with the exact source passages.</p>
     </div>
     """)
+
+    gr.Markdown(
+        "**Two ways to use this:**  &nbsp; "
+        "🧑 **Personal Workspace** — chat privately with your own files.  &nbsp;•&nbsp; "
+        "👥 **Group Collaboration** — share files and chat together with a study group."
+    )
 
     with gr.Tabs():
 
@@ -319,35 +200,41 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
 
                 # Sidebar
                 with gr.Column(scale=1, min_width=240, elem_classes="sidebar-panel"):
-                    gr.Markdown("### Upload Documents")
+                    gr.Markdown("### Step 1 — Upload your files")
                     file_input = gr.File(
-                        label="PDF · TXT · DOCX (max 15 MB each)",
+                        label="Drop PDF, TXT, or DOCX files here (max 15 MB each)",
                         file_count="multiple",
                         file_types=[".pdf", ".txt", ".docx"],
                     )
-                    process_btn = gr.Button("Index Documents", variant="primary")
+                    process_btn = gr.Button("Upload & Process", variant="primary")
                     upload_status = gr.Markdown("", elem_classes="upload-status")
 
                     gr.Markdown("---")
-                    gr.Markdown("### Active Collection")
+                    gr.Markdown("### Step 2 — Choose what to chat with")
                     collection_dropdown = gr.Dropdown(
-                        label="", choices=[], interactive=True,
-                        show_label=False,
+                        label="Document set",
+                        info="Each upload becomes a set. Pick the one your questions should search.",
+                        choices=[], interactive=True,
                     )
                     refresh_btn = gr.Button("Refresh list", size="sm", variant="secondary")
 
                     gr.Markdown("---")
-                    gr.Markdown("### RAGAS Quality Score")
-                    eval_btn = gr.Button("Evaluate collection", variant="secondary")
-                    eval_status = gr.JSON(label="Scores")
+                    gr.Markdown(
+                        "### Answer quality _(optional)_\n"
+                        "Runs an automatic accuracy check on the selected set — "
+                        "scores how well answers stick to your documents (higher = better)."
+                    )
+                    eval_btn = gr.Button("Check answer quality", variant="secondary")
+                    eval_status = gr.JSON(label="Scores (0–1, higher is better)")
 
                 # Chat + sources
                 with gr.Column(scale=3):
+                    gr.Markdown("### Step 3 — Ask questions about your files")
                     chatbot = gr.Chatbot(
                         label="",
                         height=480,
                         show_label=False,
-                        bubble_full_width=False,
+                        type="tuples",  # ponytail: UI uses [msg, reply] pairs; migrate to type="messages" when moving to gradio 6
                     )
                     with gr.Row():
                         msg_input = gr.Textbox(
@@ -360,9 +247,9 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
                         submit_btn = gr.Button("Send", variant="primary", scale=1)
                     clear_btn = gr.Button("Clear conversation", size="sm", variant="secondary")
 
-                    with gr.Accordion("Source Citations", open=False, elem_classes="source-panel"):
+                    with gr.Accordion("📎 Where did this answer come from?", open=False, elem_classes="source-panel"):
                         source_display = gr.Markdown(
-                            value="*Ask a question to see which passages were used.*"
+                            value="*Ask a question — the exact passages used to answer will appear here.*"
                         )
 
         # ── Group Collaboration ───────────────────────────────────────────
@@ -372,15 +259,20 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
 
             # Login screen
             with gr.Column(visible=True, elem_classes="login-card") as login_col:
-                gr.Markdown("## Welcome")
+                gr.Markdown("## 👥 Study Groups")
                 gr.Markdown(
-                    "Enter your name and a password.  \n"
-                    "**New?** — creates your account.  \n"
-                    "**Returning?** — restores your groups and chats."
+                    "A shared space where everyone uploads documents and chats with them **together**.\n\n"
+                    "Enter a name and password to start:\n"
+                    "- **New name** → creates your account\n"
+                    "- **Existing name** → logs you back into your groups"
                 )
-                name_input = gr.Textbox(label="Display Name", placeholder="e.g. Alice", max_lines=1)
+                name_input = gr.Textbox(
+                    label="Your Name",
+                    info="How other members see you.",
+                    placeholder="e.g. Alice", max_lines=1,
+                )
                 pass_input = gr.Textbox(
-                    label="Password (min 4 chars)",
+                    label="Password (min 8 chars)",
                     placeholder="Your password",
                     type="password",
                     max_lines=1,
@@ -402,17 +294,21 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
                         refresh_mine_btn = gr.Button("Refresh", size="sm", variant="secondary")
 
                         gr.Markdown("---")
-                        gr.Markdown("#### Create Group")
+                        gr.Markdown("#### Start a new group")
                         create_input = gr.Textbox(
-                            label="Group name", placeholder="ML Study Group", max_lines=1
+                            label="Group name",
+                            info="You'll get a share code others can use to join.",
+                            placeholder="ML Study Group", max_lines=1,
                         )
                         create_btn = gr.Button("Create", size="sm", variant="primary")
                         create_msg = gr.Markdown()
 
                         gr.Markdown("---")
-                        gr.Markdown("#### Join Group")
+                        gr.Markdown("#### Join a friend's group")
                         join_input = gr.Textbox(
-                            label="Join Code", placeholder="A1B2C3", max_lines=1
+                            label="Share code",
+                            info="Paste the 6-character code someone shared with you.",
+                            placeholder="A1B2C3", max_lines=1,
                         )
                         join_btn = gr.Button("Join", size="sm", variant="secondary")
                         join_msg = gr.Markdown()
@@ -426,7 +322,7 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
                                 group_chatbot = gr.Chatbot(
                                     height=380,
                                     label="Group chat — visible to all members",
-                                    bubble_full_width=False,
+                                    type="tuples",  # ponytail: same tuple format as the personal chatbot
                                 )
                                 with gr.Row():
                                     g_msg_input = gr.Textbox(
@@ -438,12 +334,15 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
                                 g_source_display = gr.Markdown()
 
                             with gr.Tab("Documents"):
+                                gr.Markdown(
+                                    "Files added here are searchable by **everyone** in the group's chat."
+                                )
                                 g_docs_table = gr.Dataframe(
                                     headers=["Filename", "Uploaded By", "Size", "Chunks"],
                                     interactive=False,
                                 )
                                 g_file_upload = gr.File(
-                                    label="Share documents with the group",
+                                    label="Add documents to share with the group",
                                     file_count="multiple",
                                 )
                                 g_upload_btn = gr.Button("Upload to Group", variant="primary")
@@ -532,4 +431,4 @@ with gr.Blocks(title="DocChat AI", theme=gr.themes.Soft(), css=CUSTOM_CSS) as de
 
 
 if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860, share=False)
+    demo.launch(server_name="0.0.0.0", server_port=7860, share=False, **LAUNCH_KWARGS)
